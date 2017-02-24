@@ -1,11 +1,9 @@
 import gamelocker
 from gamelocker.strings import pretty
-"""
-Author: @SpiesWithin
-"""
+
 APIKEY = "aaa.bbb.ccc"
 api = gamelocker.Gamelocker(APIKEY).Vainglory()
-def findRole(player): #Returns a dict with most used hero, item path, and role.
+def findRole(player):
     roam = 0
     crystal = 0
     weapon = 0
@@ -18,7 +16,16 @@ def findRole(player): #Returns a dict with most used hero, item path, and role.
     role = ""
     power = ""
     hero = {}
-    matches = api.matches({"page[limit]": 50, "sort": "createdAt", "filter[playerNames]": player})
+    try:
+        matches = api.matches({"page[limit]": 50, "sort": "createdAt", "filter[playerNames]": player})
+    except:
+        try:
+            matches = gamelocker.Gamelocker(APIKEY).Vainglory(region = "eu").matches({"page[limit]": 50, "filter[playerNames]": player})
+        except:
+            try:
+                matches = gamelocker.Gamelocker(APIKEY).Vainglory(region = "sg").matches({"page[limit]": 50, "filter[playerNames]": player})
+            except:
+                return("")
     items = {'Crystal': ['Echo', 'Crystal Matrix', 'Frostburn', 'EveOfHarvest', 'Broken Myth', 'Shatterglass', 'Crystal1', 'Heavy Prism', 'Aftershock', 'Void Battery', 'Cogwheel', 'Crystal3', 'Crystal2', 'Steam Battery', 'PiercingShard', 'Clockwork', 'Halcyon Chargers', 'Cooldown1'],
     'Weapon': ['Weapon3', 'BreakingPoint', 'Critical', 'LuckyStrike', 'Tornado Trigger', 'Tension Bow', 'AttackSpeed2', 'MinionsFoot', 'Weapon Blade', 'AttackSpeed1', 'BookOfEulogies', 'Heavy Steel', 'Six Sins', 'Armor Shredder', 'PoisonedShiv', 'PiercingSpear', 'Serpent Mask'],
     'Roam': ['Fountain of Renewal', 'Flaregun', 'War Treads', 'Flare', 'Scout Trap', 'Atlas Pauldron', 'Crucible', 'Stormcrown', 'Shiversteel', 'Contraption', 'StormguardBanner', 'NullwaveGauntlet', 'Dragonblood Contract', 'IronguardContract', 'Lifewell'],
@@ -88,4 +95,4 @@ def findRole(player): #Returns a dict with most used hero, item path, and role.
     "Hero": max(hero, key=hero.get)
     }
     return(stuff)
-print(findRole("IraqiZorro")) #Used for testing
+print(findRole("IraqiZorro"))
